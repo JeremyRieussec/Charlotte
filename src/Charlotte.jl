@@ -1,5 +1,7 @@
 module Charlotte
+using NLPModels, LinearAlgebra
 
-greet() = print("Hello World!")
 
+export BTRStruct
+include("secondorder/main.jl")
 end # module
