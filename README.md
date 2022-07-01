@@ -1,2 +1,2 @@
 # Charlotte
-Geraldine's Evolution 
+Geraldine's Evolution, better, faster, and cute
