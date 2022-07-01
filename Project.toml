@@ -1,0 +1,9 @@
+name = "Charlotte"
+uuid = "d4d32fd8-c5d4-4f4b-bdd1-dcf16cc21efb"
+authors = ["JLChartrand <jl_chartrand@hotmail.com>"]
+version = "0.1.0"
+
+[deps]
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
