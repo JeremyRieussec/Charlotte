@@ -1,0 +1,29 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\usepackage{hyperref}
+
+% ---------------- Biblio ---------------------
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{myplainnat.bst}
+\setcitestyle{semicolon,aysep={,}}
+
+
+% ------------- Page titre ---------------
+\author{Jean Laprés-Chartrand and Jérémy Rieussec}
+\title{Bibliography}
+
+\begin{document}
+
+	\maketitle 
+	
+	\nocite{*}	
+	
+	\bibliography{Bib_files/References.bib}
+
+\end{document}
