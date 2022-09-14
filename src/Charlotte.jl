@@ -1,7 +1,8 @@
 module Charlotte
-using NLPModels, LinearAlgebra
+using ENLPModels, LinearAlgebra, QPSolve
 
-
-export BTRStruct
+include("states/main.jl")
+include("Accumulator/main.jl")
+include("Termination/main.jl")
 include("secondorder/main.jl")
 end # module

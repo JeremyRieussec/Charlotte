@@ -1,4 +1,3 @@
-abstract type AbstractBTRStruct end
-struct BTRStruct <: AbstractBTRStruct
-    x::Vector
-end
+
+include("SecondOrderApproximations.jl")
+include("BTR/main.jl")
