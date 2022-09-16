@@ -1,4 +1,10 @@
 struct BasicTrustRegion{HAPPROX} end
+
+@doc raw"""
+    (btr::BasicTrustRegion{HAPPROX})
+
+Global loop for BTR
+"""
 function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel; state::BTRState{T, HType} = BTRState(HAPPROX, mo),
         verbose::Bool = false, nmax::Int64 = 100, tc::AbstractTerminationCriteria = genericterminationcriteria, 
         b::BasicTrustRegionConstant{T} = BTRDefaults(),
@@ -38,6 +44,14 @@ function initializeState!(mo::AbstractNLPModel, x::Vector, state::BTRState, ha::
     state.Delta = 0.1*norm(state.grad)
     updatehessian!(mo, state, ha)
 end
+
+@doc raw"""
+`function updateState!`: to update state with quadratic model update
+
+# Fields
+- `mo::AbstractNLPModel` : blablabla 
+- `state::BTRState` : blablabla
+"""
 function updateState!(mo::AbstractNLPModel, state::BTRState)
     #state.step = solvequadmodel(mo, state)
     state.step = state.H \ (-0.5*state.grad)

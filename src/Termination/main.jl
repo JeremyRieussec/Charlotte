@@ -1,5 +1,10 @@
 abstract type AbstractTerminationCriteria end
 
+"""
+    FixedGradientNorm{T}    
+
+Test trmination with grad norm 
+"""
 struct FixedGradientNorm{T} <: AbstractTerminationCriteria
     value::T
     function FixedGradientNorm(value::T = 1e-5) where T
