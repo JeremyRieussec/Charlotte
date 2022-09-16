@@ -27,6 +27,6 @@ Declare the struct, function name you want to appear in the documentation as fol
 
 3) You can add sections, sub-sections, ... like in every markdown file.
 
-4) Run ```make.jl```
+4) Run ```docs/make.jl```
 
 5) Open ```docs/build/index.html```
