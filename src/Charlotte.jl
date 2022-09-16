@@ -1,8 +1,9 @@
 module Charlotte
-using NLPModels, LinearAlgebra, Random, Statistics
+using ENLPModels, LinearAlgebra, QPSolve, Random, Statistics
 
-
-export BTRStruct
+include("states/main.jl")
+include("Accumulator/main.jl")
+include("Termination/main.jl")
 
 abstract type AbstractOptimizer end
 
