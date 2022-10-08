@@ -26,9 +26,13 @@ mutable struct NoSampling <: AbstractSampling
     NoSampling(NMax::Int) = new(NMax)
     NoSampling() = new(-1)
 end
+
+
 function sample(ns::NoSampling; isFunc::Bool = false, isGrad::Bool = false, isHes::Bool = false)
     return 1:ns.NMax
 end
+
+
 
 function sample(sampling::AbstractSampling; isFunc::Bool = false, isGrad::Bool = false, isHes::Bool = false)
     if (isHes)

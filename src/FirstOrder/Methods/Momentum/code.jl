@@ -1,19 +1,18 @@
-function computeiteration!(state::MomentumState, mo::AbstractStochasticModel, momentum::MomentumConstStep)
 
-    state.v = momentum.α*state.v - momentum.ϵ*state.g
+function computeiteration!(momentum::MomentumConstStep, state::MomentumState, mo::AbstractNLPModel; verbose::Bool = false)
+    state.v = momentum.alpha*state.v - momentum.epsilon*state.g
     state.x += state.v
 
-    grad!(state.x, mo, state.g, sample = sample(state.sampling, isGrad = true))
-    state.fx = F(state.x, mo, sample = sample(state.sampling, isFunc = true))
+    NLPModels.grad!(mo, state.x, state.g)
+    state.fx = NLPModels.obj(mo, state.x)
 end
 
-function computeiteration(state::MomentumState, mo::AbstractStochasticModel, momentum::MomentumLR{f, g}) where {f, g}
-
-    α = f(state.iter, momentum.a, momentum.b, momentum.c)
-    ϵ = g(state.iter, momentum.a, momentum.b, momentum.c)
-    state.v[:] = α*state.v - ϵ*state.g
+function computeiteration!(momentum::MomentumLR{f, g}, state::MomentumState, mo::AbstractNLPModel; verbose::Bool = false) where {f, g}
+    alpha = f(state.iter, momentum.a, momentum.b, momentum.c)
+    epsilon = g(state.iter, momentum.a, momentum.b, momentum.c)
+    state.v[:] = alpha*state.v - epsilon*state.g
     state.x += v
 
-    grad!(state.x, mo, state.g, sample = sample(state.sampling, isGrad = true))
-    state.fx = F(state.x, mo, sample = sample(state.sampling, isFunc = true))
+    NLPModels.grad!(mo, state.x, state.g)
+    state.fx = NLPModels.obj(mo, state.x)
 end

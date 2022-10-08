@@ -1,4 +1,5 @@
 struct BasicTrustRegion{HAPPROX} end
+
 function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel; state::BTRState{T, HType} = BTRState(HAPPROX, mo),
         verbose::Bool = false, nmax::Int64 = 100, tc::AbstractTerminationCriteria = genericterminationcriteria, 
         b::BasicTrustRegionConstant{T} = BTRDefaults(),
@@ -24,6 +25,7 @@ function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel; state::BTRState{
     end
     return state, accumulator
 end
+
 function BTRState(ha::HessianApproximation, mo::AbstractNLPModel)
     T = eltype(mo.meta.x0)
     HType = gethesstype(ha, T)
@@ -38,6 +40,8 @@ function initializeState!(mo::AbstractNLPModel, x::Vector, state::BTRState, ha::
     state.Delta = 0.1*norm(state.grad)
     updatehessian!(mo, state, ha)
 end
+
+
 function updateState!(mo::AbstractNLPModel, state::BTRState)
     #state.step = solvequadmodel(mo, state)
     state.step = state.H \ (-0.5*state.grad)

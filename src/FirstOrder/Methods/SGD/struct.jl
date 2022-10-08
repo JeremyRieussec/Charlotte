@@ -1,14 +1,12 @@
-
-mutable struct SGDState{T, SAM <: AbstractSampling} <: AbstractSGDState{T, SAM}
+mutable struct SGDState{T} <: AbstractSGDState
     iter::Int
     fx::T
     x::Vector{T}
     g::Vector{T}
-    sampling::SAM
     time0::Float64
     time::Float64
-    function SGDState(x0::Vector{T}, s::SAM) where {T, SAM <: AbstractSampling}
-        return new{T , SAM}(0, Inf, copy(x0), Array{T, 1}(undef, length(x0)), s, 0.0, 0.0)
+    function SGDState(x0::Vector{T}) where {T}
+        return new{T}(0, Inf, copy(x0), Array{T, 1}(undef, length(x0)), 0.0, 0.0)
     end
 end
 
@@ -25,6 +23,6 @@ struct SGDLR{f} <: AbstractSGD
     c::Float64
 end
 
-function genstate(sgd::AbstractSGD, mo::AbstractNLPModel, ::Type{SAM} = NoSampling) where {SAM <: AbstractSampling}
-    return SGDState(mo.meta.x0, SAM())
+function genstate(sgd::AbstractSGD, mo::AbstractNLPModel)
+    return SGDState(mo.meta.x0)
 end

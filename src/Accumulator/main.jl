@@ -6,6 +6,7 @@ struct ParamAccumulator{T} <: AbstractAccumulator
         return new{T}(Array{Array{T, 1}, 1}())
     end
 end
+
 function accumulate!(state::AbstractState, accumulator::ParamAccumulator)
     push!(accumulator.params, state.x)
 end

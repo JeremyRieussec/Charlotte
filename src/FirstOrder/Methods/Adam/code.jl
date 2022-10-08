@@ -1,5 +1,4 @@
-
-function computeiteration!(state::AdamState, mo::AbstractStochasticModel, adam::AdamConstStep)
+function computeiteration!(adam::AdamConstStep, state::AdamState, mo::AbstractNLPModel; verbose::Bool = false)
     # -- first order moment : m
     state.m[:] = adam.β_1*state.m + (1 - adam.β_1)*state.g
     # -- second order moment : v
@@ -10,17 +9,17 @@ function computeiteration!(state::AdamState, mo::AbstractStochasticModel, adam::
     v_cor = (1/(1-adam.β_2^(state.iter)))*state.v
     # -- vecteur parametres
     vecteur_temp = (v_cor.^(1/2)).+ adam.ϵ_precision
-    state.x -= adam.α*(m_cor./vecteur_temp)
+    state.x -= adam.alpha*(m_cor./vecteur_temp)
 
-    grad!(state.x, mo, state.g, sample = sample(state.sampling, isGrad = true))
-    state.fx = F(state.x, mo, sample = sample(state.sampling, isFunc = true))
+    NLPModels.grad!(mo, state.x, state.g)
+    state.fx = NLPModels.obj(mo, state.x)
 end
 
 
 #### A travailler
-function computeiteration!(state::AdamState, mo::AbstractStochasticModel, sgd::AdamLR{f}) where f
-    grad!(state.x, mo, state.g, sample = sample(state.sampling, isGrad = true))
-    #state.fx = F(state.x, mo, sample = sample(state.sampling, isFunc = true))
-    α = f(state.iter, sgd.a, sgd.b, sgd.c)
-    state.x -= α*state.g
+function computeiteration!(sgd::AdamLR{f}, state::AdamState, mo::AbstractNLPModel; verbose::Bool = false) where f
+    grad!( mo, state.x,state.g)
+    state.fx =  NLPModels.obj(mo, state.x)
+    alpha = f(state.iter, sgd.a, sgd.b, sgd.c)
+    state.x -= alpha*state.g
 end
