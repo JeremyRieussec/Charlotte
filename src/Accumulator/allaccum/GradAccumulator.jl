@@ -1,14 +1,23 @@
-struct GradAccumulator{T} <: AbstractAccumulator{Array{T, 1}}
+##################################################################################
+#                   Gradient 
+##################################################################################
+
+struct GradAccumulator{T} <: AbstractSingleAccumulator
     grads::Array{Array{T, 1}, 1}
-    function GradAccumulator(T = Float64)
-        return new{T}(Array{T, 1}[])
+
+    atinterval::Int # frequence of storage
+
+    function GradAccumulator(T = Float64; atinterval::Int = 1)
+        return new{T}(Array{T, 1}[], atinterval)
     end
-    function GradAccumulator{T}(a::Array{Array{T, 1}}) where T
-        return new{T}(a)
+    function GradAccumulator{T}(a::Array{Array{T, 1}}; atinterval::Int = 1) where T
+        return new{T}(a, atinterval)
     end
 end
-function accumulate!(state::AbstractState, accumulator::GradAccumulator, mo::AbstractNLPModel)
-    push!(accumulator.grads, copy(state.g))
+function accumulate!(state::AbstractState, accumulator::GradAccumulator)
+    if state.iter % accumulator.atinterval == 0
+        push!(accumulator.grads, copy(state.g))
+    end 
 end
 
 function Grad(T = Float64)
@@ -23,17 +32,33 @@ function getData(accumulator::GradAccumulator)
 end
 
 
-struct NormGradAccumulator{T} <: AbstractAccumulator{T}
+function genName(aa::GradAccumulator)
+    return :Grad
+end
+
+##################################################################################
+#                   NORM of gradient 
+##################################################################################
+
+struct NormGradAccumulator{T} <: AbstractSingleAccumulator
     ng::Array{T, 1}
-    function NormGradAccumulator(T = Float64)
-        return new{T}(T[])
+
+    atinterval::Int # frequence of storage
+    
+    function NormGradAccumulator(T = Float64; atinterval::Int = 1)
+        return new{T}(T[], atinterval)
     end
-    function NormGradAccumulator{T}(a::Array{T, 1}) where T
-        return new{T}(a)
+    function NormGradAccumulator{T}(a::Array{T, 1}; atinterval::Int = 1) where T
+        return new{T}(a, atinterval)
     end
 end
-function accumulate!(state::AbstractState, accumulator::NormGradAccumulator, mo::AbstractNLPModel)
-    push!(accumulator.ng, norm(state.g))
+
+
+function accumulate!(state::AbstractState, accumulator::NormGradAccumulator)
+    if state.iter % accumulator.atinterval == 0
+        push!(accumulator.ng, norm(state.g))
+    end
+    
 end
 
 function NGrad(T = Float64)
@@ -47,3 +72,6 @@ function getData(accumulator::NormGradAccumulator)
     return NGrad(accumulator)
 end
 
+function genName(aa::NormGradAccumulator)
+    return :NormGrad
+end

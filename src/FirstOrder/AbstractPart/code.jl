@@ -1,6 +1,6 @@
 function (sgd::AbstractSGD)(mo::AbstractNLPModel, state::AbstractState = genstate(sgd, mo); 
                 verbose::Bool = true,
-                accumulator::AbstractAccumulator = ParamAccumulator())
+                accumulator::AbstractAccumulator = Accumulator())
 
     println("Algorithm of type : $(typeof(sgd))")
     state.time0 = time_ns()

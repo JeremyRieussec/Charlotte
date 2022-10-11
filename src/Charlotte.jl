@@ -1,5 +1,5 @@
 module Charlotte
-using NLPModels, ENLPModels, LinearAlgebra, Random, Statistics
+using NLPModels, ENLPModels, LinearAlgebra, Random, Statistics, Plots
 
 import NLPModels
 
@@ -7,7 +7,7 @@ include("states/main.jl")
 include("Accumulator/main.jl")
 include("Termination/main.jl")
 
-abstract type AbstractOptimizer end
+abstract type AbstractOptimizer end 
 
 include("FirstOrder/main.jl")
 

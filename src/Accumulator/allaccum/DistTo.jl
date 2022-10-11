@@ -1,15 +1,25 @@
-struct DistTo <: AbstractAccumulator{Float64}
-    d::Array{Float64, 1}
-    xstar::Array{Float64, 1}
-    function DistTo(xstar::Array{Float64, 1})
-        return new([], xstar)
+##################################################################################
+#                   Distance to solution 
+##################################################################################
+
+struct DistTo{T} <: AbstractSingleAccumulator
+    d::Array{T, 1}
+    xstar::Array{T, 1}
+
+    atinterval::Int # frequence of storage
+
+    function DistTo(xstar::Array{T, 1}; atinterval::Int = 1) where T
+        return new{T}(T[], xstar, atinterval)
     end
-    function DistTo(d::Array{Float64, 1}, xstar::Array{Float64, 1})
-        return new(d, xstar)
+    function DistTo(d::Array{T, 1}, xstar::Array{T, 1}; atinterval::Int = 1) where T
+        return new{T}(d, xstar, atinterval)
     end
 end
-function accumulate!(state::AbstractState, accumulator::DistTo, mo::AbstractNLPModel)
-    push!(accumulator.d, norm(state.x - accumulator.xstar))
+
+function accumulate!(state::AbstractState, accumulator::DistTo)
+    if state.iter % accumulator.atinterval == 0
+        push!(accumulator.d, norm(state.x - accumulator.xstar))
+    end 
 end
 
 
@@ -19,4 +29,8 @@ end
 
 function getData(accumulator::DistTo)
     return accumulator.d
+end
+
+function genName(aa::DistTo)
+    return :DistTo
 end
