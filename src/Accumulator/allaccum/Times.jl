@@ -9,8 +9,12 @@ struct Times{T} <: AbstractSingleAccumulator
     atinterval::Int # frequence of storage
     coeff_conversion::T # for conversion from to nanoseconds to desired unit
 
-    function Times(times::Array{T, 1} = T[]; atinterval::Int = 1) where T
-        return new{T}(times, atinterval)
+    function Times{T}(times::Array{T, 1} = T[]; atinterval::Int = 1, coeff_conversion::T = T(1e-9)) where T
+        return new{T}(times, atinterval, coeff_conversion)
+    end
+
+    function Times(; atinterval::Int = 1, coeff_conversion::Float64 = 1e-9) where T
+        return Times{Float64}(Float64[]; atinterval = atinterval, coeff_conversion = coeff_conversion)
     end
 end
 

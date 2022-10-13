@@ -1,4 +1,5 @@
 function (sgd::AbstractSGD)(mo::AbstractNLPModel, state::AbstractState = genstate(sgd, mo); 
+                tc::AbstractTerminationCriteria = genericterminationcriteria,
                 verbose::Bool = true,
                 accumulator::AbstractAccumulator = Accumulator())
 
@@ -10,7 +11,7 @@ function (sgd::AbstractSGD)(mo::AbstractNLPModel, state::AbstractState = genstat
     state.time = time_ns()
     accumulate!(state, accumulator)
 
-    while !stop(genericterminationcriteria, state)
+    while !stop(tc, state)
 
         verbose && println(state)
 
@@ -34,13 +35,13 @@ end
 
 function initialize!(sgd::AbstractSGD, state::AbstractState, mo::AbstractNLPModel; verbose::Bool = false)
     verbose && println("initialize, generic sgd method")
-    NLPModels.grad!(mo, state.x, state.g)
-    state.fx = NLPModels.obj(mo, state.x)
+    ENLPModels.grad!(mo, state.x, state.g)
+    state.fx = ENLPModels.obj(mo, state.x)
 end
 
 function computeiteration!(sgd::AbstractSGD, state::AbstractState, mo::AbstractNLPModel; verbose::Bool = false)
     println("computing iteration, generic sgd methode")
-    NLPModels.grad!(mo, state.x, state.g)
-    state.fx = NLPModels.obj(mo, state.x)
+    ENLPModels.grad!(mo, state.x, state.g)
+    state.fx = ENLPModels.obj(mo, state.x)
     state.x[:] -= 0.001*state.g
 end

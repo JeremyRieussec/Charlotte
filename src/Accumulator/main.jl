@@ -7,9 +7,10 @@ include("allaccum/GradAccumulator.jl")
 include("allaccum/Times.jl")
 include("allaccum/NormStepAccumulator.jl")
 include("allaccum/ValueAccumulator.jl")
+include("allaccum/SamplingsizeAccumulator.jl")
 
 function genName(aa::AbstractSingleAccumulator)
-    return Symbol(typeof(aa))
+    @warn "genName for $(typeof(aa)) not defined"
 end
 
 mutable struct Accumulator <: AbstractAccumulator
@@ -32,6 +33,16 @@ function accumulate!(state::AbstractState, accumulator::Accumulator)
         accumulate!(state, accumulator.accs[i])
     end
 end
+
+# function accumulate!(state::AbstractState, sampling::AbstractState, accumulator::Accumulator)
+#     for singleacc in accumulator.accs
+#         if typeof(singleacc) <: SamplingSizeAccumulator
+#             accumulate!(state, sampling, singleacc)
+#         else
+#             accumulate!(state, singleacc)
+#         end
+#     end
+# end
 
 """
 `getData` return a NamedTuple with accumulators default names as names and accumulated values as values.

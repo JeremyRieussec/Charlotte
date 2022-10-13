@@ -1,3 +1,4 @@
+abstract type AbstractDynamicSampling <: AbstractSampling end
 
 mutable struct DynamicSampling{I <: AbstractRandomNumbers, T} <: AbstractDynamicSampling
     NMin::Int
