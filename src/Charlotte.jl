@@ -15,11 +15,15 @@ abstract type AbstractStochasticMethod end
 abstract type Stochastic <:  AbstractStochasticMethod end
 abstract type Deterministic <:  AbstractStochasticMethod end
 
+# Quadratic Model solving 
+include("SecondOrderApproximation/main.jl")
+include("SolveQuadModel/main.jl")
 
 # Deterministic
 include("Deterministic/FirstOrder/main.jl")
+include("Deterministic/SecondOrder/main.jl")
 
-
+# Stochastic
 include("Stochastic/main.jl")
 
 

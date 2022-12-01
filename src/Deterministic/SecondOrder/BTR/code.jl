@@ -1,19 +1,26 @@
 struct BasicTrustRegion{HAPPROX} end
 
-function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel; state::BTRState{T, HType} = BTRState(HAPPROX, mo),
-        verbose::Bool = false, nmax::Int64 = 100, tc::AbstractTerminationCriteria = genericterminationcriteria, 
-        b::BasicTrustRegionConstant{T} = BTRDefaults(),
-        accumulator::AbstractAccumulator = ParamAccumulator()) where {T, HType, HAPPROX}
+function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel;
+                                                state::BTRState{T, HType} = BTRState(HAPPROX, mo),
+                                                tc::AbstractTerminationCriteria = genericterminationcriteria, 
+                                                solveQP::AbstractQuadSolve = TCG!,
+                                                b::AbstractBasicTrustRegion = BTRCoeffs(),
+                                                accumulator::AbstractAccumulator = Accumulator(), 
+                                                verbose::Bool = false) where {T, HType, HAPPROX}
+
+    # starting point
     x0 = mo.meta.x0
+
     initializeState!(mo, x0, state, HAPPROX)
+
     while !stop(tc, state)
         accumulate!(state, accumulator)
         verbose && println(state)
-        updateState!(mo, state)
+        updateState!(mo, state, solveQP)
         if acceptCandidate!(state, b)
             state.x = copy(state.xcand)
             state.fx = state.fcand
-            state.grad = grad(mo, state.x)
+            state.grad = ENLModels.grad(mo, state.x)
             updatehessian!(mo, state, HAPPROX)
         end
         updateRadius!(state, b)
@@ -35,22 +42,28 @@ end
 
 function initializeState!(mo::AbstractNLPModel, x::Vector, state::BTRState, ha::AP) where {AP <: HessianApproximation}
     state.x = x
-    state.fx = obj(mo, x)
-    state.grad = grad(mo, x)
+    state.fx = ENLPModels.obj(mo, x)
+    state.grad = ENLPModels.grad(mo, x)
     state.Delta = 0.1*norm(state.grad)
     updatehessian!(mo, state, ha)
 end
 
 
-function updateState!(mo::AbstractNLPModel, state::BTRState)
-    #state.step = solvequadmodel(mo, state)
-    state.step = state.H \ (-0.5*state.grad)
-    if norm(state.step) > state.Delta
-        state.step = state.Delta * normalize(state.step)
-    end
+function updateState!(mo::AbstractNLPModel, state::BTRState, solveQuadModel!::AbstractQuadSolve)
+
+    # step to get to minimizer of the quadartic model
+    state.step = solveQuadModel!(state)
+
+    # candidate vector
     state.xcand = state.x+state.step
-    state.fcand = obj(mo, state.xcand)
+    # function value at candidate
+    state.fcand = ENLModels.obj(mo, state.xcand)
+    # first order decrease of the model with step -> dotProduct(gradient, step)
     state.gs = dot(state.step, state.grad)
+    # second order decrease of the model with step -> step^T.H.step
     state.sHs = dot(state.step, state.H*state.step)
+
+    # decrease accuracy 
     state.rho = (state.fcand-state.fx)/(state.gs + 0.5*state.sHs)
 end
+

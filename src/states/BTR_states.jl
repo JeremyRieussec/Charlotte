@@ -2,18 +2,28 @@ mutable struct BTRState{T, HType} <: AbstractState where {T, HType}
     it::Int64
     x::Vector{T}
     xcand::Vector{T}
+
     grad::Vector{T}
     H::HType
     step::Vector{T}
+
     gs::T
     sHs::T
+
     Delta::T
+    DeltaMax::T
+
     rho::T
+    accept::Bool
+
     fx::T
     fcand::T
+
     function BTRState(::Type{T} = Float64, ::Type{HType} = Matrix{T}) where {T, HType}
         state = new{T, HType}()
         state.it = 0
+        state.accept = false
+        state.DeltaMax = 1e12
         return state
     end
 end

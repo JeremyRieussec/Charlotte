@@ -1,5 +1,3 @@
-
-
 abstract type AbstractSingleTerminationCriterion end
 
 abstract type AbstractTerminationCriteria end
@@ -24,6 +22,13 @@ end
     return false
 end
 
+@inline function stop(tc::AbstractSingleTerminationCriterion, state::AbstractState)
+    @warn "stop not defined for $(typeof(tc))"
+end
+
+function gensym(test::AbstractSingleTerminationCriterion) 
+    @warn "gensym not defined for $(typeof(test))"
+end
 
 ### Fixed Gradient Norm
 struct FixedGradientNorm{T} <: AbstractSingleTerminationCriterion
@@ -37,7 +42,7 @@ end
     return norm(state.g) <= tc.value
 end
 
-gensym(::FixedGradientNorm) = :FixedGradientNorm
+gensym(test::FixedGradientNorm) = :FixedGradientNorm
 
 
 ### Maximum iteration
@@ -52,7 +57,7 @@ end
     return state.iter > tc.value
 end
 
-gensym(::NMaxStop) = :NMax
+gensym(test::NMaxStop) = :NMax
 
 
 ### Maximum time 
@@ -68,7 +73,7 @@ end
     return (state.time - state.time0)/1e9 > tc.value
 end
 
-gensym(::TMaxStop) = :TMax
+gensym(test::TMaxStop) = :TMax
 
 
 ### Definition of global stopiing criteria
