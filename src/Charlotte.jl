@@ -1,7 +1,6 @@
 module Charlotte
-using NLPModels, ENLPModels, LinearAlgebra, Random, Statistics, Plots
-
-import NLPModels
+using ENLPModels, LinearAlgebra, Random, Statistics, QuadraticModels
+using Test
 
 
 include("states/main.jl")
@@ -17,7 +16,7 @@ abstract type Deterministic <:  AbstractStochasticMethod end
 
 
 # Deterministic
-include("Deterministic/FirstOrder/main.jl")
+include("Deterministic/main.jl")
 
 
 include("Stochastic/main.jl")

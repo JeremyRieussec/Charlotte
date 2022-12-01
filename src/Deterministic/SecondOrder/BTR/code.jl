@@ -1,5 +1,7 @@
 struct BasicTrustRegion{HAPPROX} end
-
+function BasicTrustRegion()
+    return BasicTrustRegion{HessianMatrix}()
+end
 function (btr::BasicTrustRegion{HAPPROX})(mo::AbstractNLPModel; state::BTRState{T, HType} = BTRState(HAPPROX, mo),
         verbose::Bool = false, nmax::Int64 = 100, tc::AbstractTerminationCriteria = genericterminationcriteria, 
         b::BasicTrustRegionConstant{T} = BTRDefaults(),

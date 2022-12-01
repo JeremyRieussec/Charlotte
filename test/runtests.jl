@@ -1,5 +1,5 @@
 using Test
 
-@testset "MOI" begin
+@testset "Charlotte" begin
     include("test/main.jl")
 end
