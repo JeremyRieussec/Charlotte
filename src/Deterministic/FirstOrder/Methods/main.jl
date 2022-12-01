@@ -1,0 +1,6 @@
+#include("AG/main.jl")
+#include("SAG/main.jl")
+include("SGD/main.jl")
+include("Adam/main.jl")
+include("Momentum/main.jl")
+include("Nesterov/main.jl")
