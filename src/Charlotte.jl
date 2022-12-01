@@ -1,6 +1,7 @@
 module Charlotte
-using ENLPModels, LinearAlgebra, Random, Statistics, QuadraticModels
+using LinearAlgebra, Random, Statistics
 using Test
+using ENLPModels, QuadraticModels
 
 
 include("states/main.jl")
