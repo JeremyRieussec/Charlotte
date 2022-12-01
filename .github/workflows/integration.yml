@@ -34,3 +34,8 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - name: Setup Julia environment
+        uses: julia-actions/setup-julia@v1.8.3
+      - uses: julia-actions/julia-buildpkg@v1
+      - run: julia -e 'println("Hello, World!")'
+      - run: julia -e 'import Pkg ; Pkg.test("Charlotte")'
